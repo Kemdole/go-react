@@ -1,0 +1,6 @@
+server:
+  version: 1.0
+  port: 8081
+  privatePort: 9091
+
+api:
