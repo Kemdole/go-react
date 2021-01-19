@@ -1,15 +1,30 @@
 package todo
 
-import "go-react/service"
+import (
+	"go-react/common"
+	"net/http"
+)
 
-var PublicRouteConfigs = &service.RouteConfig{
-	RootPath: "/todo",
-	Routes:   nil,
-	Inits:    []service.InitFunc{},
+func PublicRouteConfigs(svc *Service) *common.RouteConfig {
+	return &common.RouteConfig{
+		RootPath: "/todo",
+		Routes: []common.Route{
+			{
+				Endpoint: "/:id",
+				Method:   http.MethodGet,
+				Handler:  getTodoHandler(svc),
+			},
+		},
+		Inits: []common.InitFunc{
+			initService(svc),
+		},
+	}
 }
 
-var PrivateRouteConfigs = &service.RouteConfig{
-	RootPath: "/todo",
-	Routes:   nil,
-	Inits:    []service.InitFunc{},
+func PrivateRouteConfigs(svc *Service) *common.RouteConfig {
+	return &common.RouteConfig{
+		RootPath: "/todo",
+		Routes:   nil,
+		Inits:    []common.InitFunc{},
+	}
 }

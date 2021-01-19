@@ -2,21 +2,33 @@ package main
 
 import (
 	"github.com/spf13/viper"
-	"go-react/service"
+	"go-react/common"
 	"go-react/todo/todo"
 )
 
 func main() {
-	service.StartServer(
-		[]*service.RouteConfig{
-			todo.PublicRouteConfigs,
+	done := make(chan bool)
+	defer close(done)
+
+	common.ReadConfigs("monolith")
+
+	todoCtr := todo.NewController()
+
+	go common.StartServer(
+		[]*common.RouteConfig{
+			todo.PublicRouteConfigs(todoCtr),
 		},
 		viper.GetInt("server.port"),
+		done,
 	)
-	service.StartServer(
-		[]*service.RouteConfig{
-			todo.PrivateRouteConfigs,
+	go common.StartServer(
+		[]*common.RouteConfig{
+			todo.PrivateRouteConfigs(todoCtr),
 		},
 		viper.GetInt("server.privatePort"),
+		done,
 	)
+
+	<-done
+	<-done
 }

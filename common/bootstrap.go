@@ -1,4 +1,4 @@
-package service
+package common
 
 import (
 	"errors"
@@ -42,11 +42,11 @@ func StartServer(routeConfig []*RouteConfig, port int, done chan bool) {
 
 	for i := range routeConfig {
 		AddService(r, routeConfig[i])
+		ExecuteInits(routeConfig[i].Inits)
 	}
 
 	r.Run(fmt.Sprintf(":%d", port))
 	done <- true
-	log.Println(fmt.Sprintf("server is running at port %d", port))
 }
 
 func ReadConfigs(svcName string) {
@@ -85,4 +85,10 @@ func AddService(r *gin.Engine, routeConfig *RouteConfig) {
 	}
 
 	RegisterRoutes(r, *routeConfig)
+}
+
+func ExecuteInits(initFuncs []InitFunc) {
+	for i := range initFuncs {
+		initFuncs[i]()
+	}
 }
