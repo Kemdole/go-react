@@ -16,6 +16,7 @@ type InitFunc func()
 type Route struct {
 	Endpoint   string
 	Method     string
+	Policy     string
 	Version    string
 	Handler    gin.HandlerFunc
 	MiddleWare []gin.HandlerFunc
@@ -24,11 +25,12 @@ type Route struct {
 func RegisterRoutes(r *gin.Engine, c RouteConfig) {
 	g := r.Group(c.RootPath)
 	for i := range c.Routes {
-		v := c.Routes[i].Version
-		if v == "" {
-			v = "/v1"
+		var ep string
+		if c.Routes[i].Version != "" {
+			ep = c.Routes[i].Version + c.Routes[i].Endpoint
+		} else {
+			ep = c.Routes[i].Endpoint
 		}
-		ep := v + c.Routes[i].Endpoint
 
 		switch c.Routes[i].Method {
 		case http.MethodGet:

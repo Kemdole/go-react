@@ -6,7 +6,9 @@ import (
 )
 
 func main() {
-	svc := todo.NewService()
+	svc := todo.NewService(todo.Dependancies{
+		Repository: todo.NewRepository(nil),
+	})
 
 	common.StartService(common.ServerConfig{
 		ServiceName:       "todo",

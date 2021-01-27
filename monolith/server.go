@@ -12,7 +12,9 @@ func main() {
 
 	common.ReadConfigs("monolith")
 
-	todoCtr := todo.NewController()
+	todoCtr := todo.NewService(todo.Dependancies{
+		Repository: todo.NewRepository(nil),
+	})
 
 	go common.StartServer(
 		[]*common.RouteConfig{
