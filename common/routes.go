@@ -8,10 +8,7 @@ import (
 type RouteConfig struct {
 	RootPath string
 	Routes   []Route
-	Inits    []InitFunc
 }
-
-type InitFunc func()
 
 type Route struct {
 	Endpoint   string

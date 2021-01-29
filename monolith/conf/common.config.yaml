@@ -1,4 +1,0 @@
-server:
-  version: 1.0
-  port: 8080
-  privatePort: 9090

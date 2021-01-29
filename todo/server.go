@@ -10,9 +10,12 @@ func main() {
 		Repository: todo.NewRepository(nil),
 	})
 
-	common.StartService(common.ServerConfig{
+	common.StartService(common.ServiceConfig{
 		ServiceName:       "todo",
 		PublicRouteConfig: todo.PublicRouteConfigs(svc),
 		PrivateRoutConfig: todo.PrivateRouteConfigs(svc),
+		Inits: []common.InitFunc{
+			todo.InitService(svc),
+		},
 	})
 }

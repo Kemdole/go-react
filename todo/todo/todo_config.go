@@ -39,9 +39,6 @@ func PublicRouteConfigs(svc *Service) *common.RouteConfig {
 				Handler:  deleteTodoHandler(svc),
 			},
 		},
-		Inits: []common.InitFunc{
-			initService(svc),
-		},
 	}
 }
 
@@ -49,6 +46,5 @@ func PrivateRouteConfigs(svc *Service) *common.RouteConfig {
 	return &common.RouteConfig{
 		RootPath: "/todo",
 		Routes:   nil,
-		Inits:    []common.InitFunc{},
 	}
 }

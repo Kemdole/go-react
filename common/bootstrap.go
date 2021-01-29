@@ -8,13 +8,18 @@ import (
 	"log"
 )
 
-type ServerConfig struct {
+type ServiceConfig struct {
 	ServiceName       string
 	PublicRouteConfig *RouteConfig
 	PrivateRoutConfig *RouteConfig
+	Inits             []InitFunc
+	Events            []Event
 }
 
-func StartService(sc ServerConfig) {
+type InitFunc func()
+type Event interface{} //temp
+
+func StartService(sc ServiceConfig) {
 	ReadConfigs(sc.ServiceName)
 
 	done := make(chan bool)
@@ -32,6 +37,9 @@ func StartService(sc ServerConfig) {
 		go StartServer([]*RouteConfig{sc.PrivateRoutConfig}, privatePort, done)
 		<-done
 	}
+
+	ExecuteInits(sc.Inits)
+
 	<-done
 }
 
@@ -42,7 +50,6 @@ func StartServer(routeConfig []*RouteConfig, port int, done chan bool) {
 
 	for i := range routeConfig {
 		AddService(r, routeConfig[i])
-		ExecuteInits(routeConfig[i].Inits)
 	}
 
 	r.Run(fmt.Sprintf(":%d", port))
